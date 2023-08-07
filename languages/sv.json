@@ -1,0 +1,25 @@
+{
+    "BITHIRDBMOD.table_kin": "Släkte",
+    "BITHIRDBMOD.table_name": "Namn - {targettable}",
+    "BITHIRDBMOD.table_profession": "Yrke",
+    "BITHIRDBMOD.table_mage_profession": "Yrke - Magiker",
+    "BITHIRDBMOD.table_nickname": "Tillnamn  - {professionName}",
+    "BITHIRDBMOD.table_gear": "Ägodelar - {professionName}",
+    "BITHIRDBMOD.table_age": "Ålder",
+    "BITHIRDBMOD.table_weakness": "Svaghet",
+    "BITHIRDBMOD.table_appearance": "Utseende",
+    "BITHIRDBMOD.table_memento": "Minnessak",
+    "BITHIRDBMOD.mage_starter": "Magiker.",
+    "BITHIRDBMOD.artisan_starter": "Hantverkare",
+    "BITHIRDBMOD.artisan_blacksmith": "Mästersmed", 
+    "BITHIRDBMOD.artisan_carpenter": "Mästersnickare",
+    "BITHIRDBMOD.artisan_tanner": "Garverimästare",
+    "BITHIRDBMOD.age_young": "Ung",
+    "BITHIRDBMOD.age_adult": "Medelålders",
+    "BITHIRDBMOD.age_old": "Gammal",
+
+    "BITHIRDBMOD.copper": "\\[\\[\\/roll ([^\\]]+)\\]\\] .oppar",
+    "BITHIRDBMOD.silver": "\\[\\[\\/roll ([^\\]]+)\\]\\] .ilver",
+    "BITHIRDBMOD.gold": "\\[\\[\\/roll ([^\\]]+)\\]\\] .uld"
+
+}

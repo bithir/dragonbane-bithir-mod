@@ -1,6 +1,6 @@
 {
-  "id": "module",
-  "title": "New Module",
+  "id": "dragonbane-bithir-mod",
+  "title": "Bithir's Dragonbane mods",
   "description": "",
   "version": "#{VERSION}#",
   "library": "false",
@@ -12,13 +12,21 @@
   },
   "authors": [
     {
-      "name": "The League of Extraordinary FVTT Developers",
-      "url": "https://github.com/League-of-Foundry-Developers",
-      "discord": "discordID#0001"
+      "name": "Peter Norell",
+      "discord": "bithir",
+      "url": "https://github.com/bithir"
     }
   ],
   "relationships": {
-    "systems": [],
+    "systems": [{
+      "id": "dragonbane",
+      "type": "system",
+      "manifest": "https://github.com/pafvel/dragonbane/releases/download/v1.0.0/system.json",
+      "compatibility": {
+        "minimum": "1.0.0",
+        "verified": "1.0.0"
+      }
+    }],
     "requires": []
   },
   "esmodules": [

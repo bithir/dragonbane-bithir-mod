@@ -1,3 +1,25 @@
 {
-    "MODULE.hello": "hello"
+    "BITHIRDBMOD.table_kin": "Kin",
+    "BITHIRDBMOD.table_name": "Name - {targettable}",
+    "BITHIRDBMOD.table_profession": "Profession",
+    "BITHIRDBMOD.table_mage_profession": "Profession - Mage",
+    "BITHIRDBMOD.table_nickname": "Nickname - {professionName}",
+    "BITHIRDBMOD.table_gear": "Gear - {professionName}",
+    "BITHIRDBMOD.table_age": "Age",
+    "BITHIRDBMOD.table_weakness": "Weakness",
+    "BITHIRDBMOD.table_appearance": "Appearance",
+    "BITHIRDBMOD.table_memento": "Memento",
+    "BITHIRDBMOD.mage_starter": "Mage.",
+    "BITHIRDBMOD.artisan_starter": "Artisan",
+    "BITHIRDBMOD.artisan_blacksmith": "Master Blacksmith", 
+    "BITHIRDBMOD.artisan_carpenter": "Master Carpenter",
+    "BITHIRDBMOD.artisan_tanner": "Master Tanner",
+    "BITHIRDBMOD.age_young": "Young",
+    "BITHIRDBMOD.age_adult": "Adult",
+    "BITHIRDBMOD.age_old": "Old",
+
+    "BITHIRDBMOD.copper": "\\[\\[\\/roll ([^\\]]+)\\]\\] .opper",
+    "BITHIRDBMOD.silver": "\\[\\[\\/roll ([^\\]]+)\\]\\] .ilver",
+    "BITHIRDBMOD.gold": "\\[\\[\\/roll ([^\\]]+)\\]\\] .old"
+
 }
