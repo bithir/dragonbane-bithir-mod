@@ -17,13 +17,13 @@ export class BithirDBApi
         return roll.total;
     }
 
-    async getOrCreateFolderId(folderName) {
+    async getFolderId(folderType, folderName) {
         let folder = game.folders.filter( f => { return f.name == folderName && f.type == 'Actor'; });
         if(folder.length == 0) {
             // Create folder            
             let f = await Folder.create({
                 name: folderName,
-                type: 'Actor',
+                type: folderType,
             });
             return f.id;
         } else { 

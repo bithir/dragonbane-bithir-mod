@@ -29,21 +29,55 @@
     }],
     "requires": []
   },
+  "packFolders": [{
+    "name":"Bithir's symbaroum mods",
+    "packs": [
+      "macros",
+      "information",
+      "tables"
+    ]
+  }],
+  "packs": [{
+      "name": "macros",
+      "label": "Macros",
+      "system": "dragonbane",
+      "type": "Macro",
+      "path": "packs/macros",
+      "banner": "modules/dragonbane-bithir-mod/assets/banner/duck-knight-banner.webp" 
+    },{
+      "name": "information",
+      "label": "Information",
+      "system": "dragonbane",
+      "type": "JournalEntry",
+      "path": "packs/information",
+      "banner": "modules/dragonbane-bithir-mod/assets/banner/duck-knight-banner.webp" 
+    },{
+      "name": "tables",
+      "label": "Tables",
+      "system": "dragonbane",
+      "type": "RollTable",
+      "path": "packs/tables",
+      "banner": "modules/dragonbane-bithir-mod/assets/banner/duck-knight-banner.webp" 
+  }],  
   "esmodules": [
     "scripts/module.js"
   ],
   "scripts": [
-    "scripts/lib/lib.js"
   ],
   "styles": [
-    "styles/module.css"
+    "css/module.css"
   ],
   "languages": [
     {
       "lang": "en",
       "name": "English",
       "path": "languages/en.json"
-    }
+    },
+    {
+      "lang": "sv",
+      "name": "Svenska",
+      "path": "languages/sv.json"
+    }    
   ],
   "url": "#{URL}#",
   "manifest": "#{MANIFEST}#",
@@ -52,8 +86,8 @@
   "readme": "README.md",
   "media": [
     {
-      "type": "icon",
-      "url": "https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4"
+      "type": "cover",
+      "url": ""
     }
   ]
 }

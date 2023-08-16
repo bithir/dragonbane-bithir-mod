@@ -1,4 +1,81 @@
-.test { 
-    color: black;
+.bdmgendiag .text-container {
+    height: 100%;
+    width: 100%;
+    align-self: start;
+    background-image: url(../../../systems/dragonbane/art/ui/arrow-left.webp), url(../../../systems/dragonbane/art/ui/arrow-right.webp), url(../../../systems/dragonbane/art/ui/separator-middle.webp), url(../../../systems/dragonbane/art/ui/arrow-left.webp), url(../../../systems/dragonbane/art/ui/arrow-right.webp), url(../../../systems/dragonbane/art/ui/separator-middle.webp), url(../../../systems/dragonbane/art/ui/parchment-vertical.webp);
+    background-position: left -16px bottom, right -16px bottom, center bottom 4px, left -16px top, right -16px top, center top 4px, center center;
+    background-clip: border-box, border-box, padding-box, border-box, border-box, padding-box, content-box;
+    background-repeat: no-repeat, no-repeat, repeat-x, no-repeat, no-repeat, repeat-x, repeat-y;
+    background-size: auto 24px, auto 24px, auto 16px, auto 24px, auto 24px, auto 16px, 100% auto;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    margin-top: 4px;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 16px;
+    border-top: 0px;
+}
 
+.bdmgendiag .headerrow {
+    align-items:center;
+    width: 100%;
+}
+
+.bdmgendiag .header {
+    width: 274px;
+    height: 32px;
+    top: -16px;
+    padding: 6px 24px 12px 24px;
+    background-image: url(../../../systems/dragonbane/art/ui/text-box-title-bg.webp);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    color: whitesmoke;
+    font-weight: bold;
+    text-align: center;
+    align-items: center;
+}
+
+.bdmgendiag table {
+    border-bottom: 0px;
+    border-top: 0px;
+    background-color: transparent;
+}
+
+.bdmgendiag th {
+    text-align: center;
+    color: whitesmoke;
+    background-image: url(../../../systems/dragonbane/art/ui/table-row-right.webp), url(../../../systems/dragonbane/art/ui/arrow-left.webp), url(../../../systems/dragonbane/art/ui/title-bar.webp);
+    background-size: contain, contain, contain;
+    background-clip: border-box, border-box, content-box;
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    background-position: right -8px center, left center, center center;
+    height: 2.5em;
+    padding-left: 30px;
+    min-width: 180px;
+    size: 180px;
+    max-width: 180px;
+}
+
+.bdmgendiag td select {
+    min-width: 12em;
+}
+
+.bdmgendiag td {
+    text-align: center;
+    color: black;
+    background-image: url(../../../systems/dragonbane/art/ui/table-row-right.webp), url(../../../systems/dragonbane/art/ui/arrow-right.webp), url(../../../systems/dragonbane/art/ui/table-row-banner2.webp);
+    background-size: contain, contain, contain;
+    background-clip: border-box, border-box, content-box;
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    background-position: left -8px center, right center, center center;
+    height: 2.5em;
+    padding-right: 30px;
+    min-width: 6em;
+}
+
+.bdmgendiag .checkbox {
+    width: 12px;
+    margin: 0px;
+    vertical-align: middle;
 }

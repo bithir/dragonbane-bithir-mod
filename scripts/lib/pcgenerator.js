@@ -6,11 +6,20 @@ export class PCGenerator
 
     }
 
-    async generatePC() {
+    async generatePC(generatorSelection) {
+        console.log("Generating PC");
+        // Establish defaults we will use later on
         let api = game.bithirdbmod.api;
         let conf = game.bithirdbmod.config;
-        let train = true;
-        const folderId = await api.getFolderId("Generated")
+        let train = generatorSelection.train;
+
+        // Make a list of mage occupation ids
+        let mages = game.tables.getName(api.localize(`table_mage_profession`)).results.map(
+            m_elem => { 
+                return m_elem.documentId;
+            }
+        );
+        const folderId = await api.getFolderId('Actor',api.localize('generatedActorFolder'));
         const actorDetails = {
             type: "character",
             folder: null,
@@ -27,7 +36,14 @@ export class PCGenerator
         let allEmbeddedItems = []
         
         // Roll kin
-        let [kin, kinName] = await api.getRollTableValues(api.localize('table_kin') );
+        let kin, kinName;
+
+        kin = game.items.get(generatorSelection.kin);
+        if(kin) {
+            kinName = kin.name; 
+        } else {
+            [kin, kinName] = await api.getRollTableValues(api.localize('table_kin') );            
+        }
         allEmbeddedItems.push(kin);
         // Get kin ability
         let allKinAbilities = kin.system.abilities.split(',');
@@ -39,33 +55,52 @@ export class PCGenerator
         let [nameItem, characterName] = await api.getRollTableValues(api.localize(`table_name`, { targettable:kinName}));
         actorDetails.name = characterName;
         // Roll profession
-        let [profession, professionName] = await api.getRollTableValues(api.localize(`table_profession`));
-        console.log(`profession[${profession}] professionName[${professionName}]`);
-        // Used later when we iterate and raise skills
-        if(professionName.startsWith(api.localize('mage_starter'))) {    
-            let [mageProfession, mageType] = await api.getRollTableValues(api.localize(`table_mage_profession`));   
-            profession = mageProfession;
-            // Need to handle secondary skills here 
-            professionName = 'Mage';
-        } else if(professionName.startsWith(api.localize('artisan_starter') ) ) {
-            // One of 
-            let systemAbility = game.items.getName(api.localize(api.artisans[Math.floor(Math.random()*api.artisans.length)]));
-            if(!systemAbility) {
-                console.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
-                return;
-            }    
-            let profItem = duplicate(systemAbility);
-            allEmbeddedItems.push( profItem);
-        } else {
-            // profession heroic abilities 
-            let systemAbility = game.items.getName(profession.system.abilities);
-            if(!systemAbility) {
-                console.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
-                return;
+        let profession, professionName;
+        profession = game.items.get(generatorSelection.profession);
+        if(profession) {
+            profession = duplicate(profession);
+            // TODO: Mage need to be in the professionName for table draws later
+            if(mages.includes(profession._id)) {
+                professionName = api.localize('mage_name');
+            } else if(profession.type != "profession" ) {
+                // For artisans, the profession item contains the master ability
+                // So our educated guess is artisan if the profession ability is not a profession
+                allEmbeddedItems.push(duplicate(profession));                
+                profession = duplicate(game.items.getName(api.localize("artisan_name")));
+                // TODO: Artisan need to be in the professionName for table draws later
+                professionName = profession.name; 
+            } else {
+                professionName = profession.name; 
             }
-            let profItem = duplicate(systemAbility);
-            allEmbeddedItems.push( profItem);
+        } else {
+            [profession, professionName] = await api.getRollTableValues(api.localize(`table_profession`));
+            // Used later when we iterate and raise skills
+            if(professionName.startsWith(api.localize('mage_starter'))) {    
+                let [mageProfession, mageType] = await api.getRollTableValues(api.localize(`table_mage_profession`));   
+                profession = mageProfession;
+                // Need to handle secondary skills here 
+                professionName = 'Mage';
+            } else if(professionName.startsWith(api.localize('artisan_starter') ) ) {
+                // One of 
+                let systemAbility = game.items.getName(api.localize(conf.artisans[Math.floor(Math.random()*conf.artisans.length)]));
+                if(!systemAbility) {
+                    console.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
+                    return;
+                }    
+                let profItem = duplicate(systemAbility);
+                allEmbeddedItems.push( profItem);
+            } else {
+                // profession heroic abilities 
+                let systemAbility = game.items.getName(profession.system.abilities);
+                if(!systemAbility) {
+                    console.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
+                    return;
+                }
+                let profItem = duplicate(systemAbility);
+                allEmbeddedItems.push( profItem);
+            }
         }
+        console.log(`profession[${  JSON.stringify(profession)}] professionName[${professionName}]`);
         allEmbeddedItems.push(profession);
         
         // Roll profession nickname
@@ -85,32 +120,35 @@ export class PCGenerator
             let reGold = new RegExp(api.localize('gold'), 'g');
             let copper = reCopper.exec(myItem); 
             if(copper) { 
-                actorDetails.system.currency.cc = parseInt(copper);
+                let r = await new Roll(copper[1]).roll();
+                actorDetails.system.currency.cc = parseInt(r.total);
             }
             let silver = reSilver.exec(myItem);
             if(silver) { 
-                actorDetails.system.currency.sc = parseInt(silver);
+                let r = await new Roll(silver[1]).roll();
+                actorDetails.system.currency.sc = parseInt(r.total);
             }
             let gold = reGold.exec(myItem);
             if(gold) { 
-                actorDetails.system.currency.gc = parseInt(gold);
+                let r = await new Roll(gold[1]).roll();
+                actorDetails.system.currency.gc = parseInt(r.total);
             }
-            let itemUUIDMatch = [...myItem.matchAll(/(?<roll>\[\[\/roll ([^\]]+)\]\])?x?UUID\[(?<uuid>[^\]]+)]/g)]
+            let itemUUIDMatch = [...myItem.matchAll(/(\[\[\/roll (?<roll>[^\]]+)\]\])?x?@UUID\[(?<uuid>[^\]]+)]/g)]
             // let itemUUIDMatch = myItem.match(/(?<test>\[\[\/roll ([^\]]+)\]\]x)?UUID\[(?<uuid>[^\]]+)])/);
-            if(!itemUUIDMatch) continue;
-            let carriedTool = await fromUuid(itemUUIDMatch.groups['UUID']);
+            if(!itemUUIDMatch || !itemUUIDMatch[0]) continue;
+            let carriedTool = duplicate(await fromUuid(itemUUIDMatch[0].groups['uuid']));
             if(['weapon','armor','helmet'].includes(carriedTool.type)) {
                 carriedTool.system.worn = true;
-            } else if(itemUUIDMatch.groups['roll']) { 
-                carriedTool.system.quantity = await (new Roll(itemUUIDMatch.groups['roll'])).roll();
+            } else if(itemUUIDMatch[0].groups['roll']) { 
+                carriedTool.system.quantity = (await (new Roll(itemUUIDMatch[0].groups['roll'])).roll()).total;
+                console.log(`Rolled quantity ${carriedTool.system.quantity}`);
+                // carriedTool.name = `${carriedTool.system.quantity} ${carriedTool.name}`;
             }
             allEmbeddedItems.push(carriedTool);
         }
         // Roll age
         let [ageItemNotUsed, age] = await api.getRollTableValues(api.localize('table_age'));
         actorDetails.system.age = age;
-        
-        // Increase abilities as per age
         
         // Roll weakness
         let [weaknessItemNotUsed, weakness] = await api.getRollTableValues(api.localize(`table_weakness`));
@@ -140,7 +178,7 @@ export class PCGenerator
         if(train) {
             let upgradeAbilities = [];
             let allAbilities = duplicate(scriptActor.system.skills);
-            trainedAbilities = scriptActor.system.skills.filter( (elem) => { return elem.system.isProfessionSkill});
+            let trainedAbilities = scriptActor.system.skills.filter( (elem) => { return elem.system.isProfessionSkill});
             console.log("All trainedAbilities",trainedAbilities);
             // 6 abilities from profession at 2x base chance
             for ( let i = 0; i<6; i++) {
@@ -152,10 +190,9 @@ export class PCGenerator
             }
         
             console.log('allAbilities', allAbilities)
-            const ageBonusSkillsCount = {};
-            ageBonusSkillsCount[api.localize(age_young)] =2;
-            ageBonusSkillsCount[api.localize(age_adult)] =4;
-            ageBonusSkillsCount[api.localize(age_old)] =6;
+            const ageBonusSkillsCount = game.bithirdbmod.config.ageBonusSkillsCount;
+        
+            // Increase abilities as per age
             for ( let i = 0; i<ageBonusSkillsCount[age] && allAbilities.length > 0; i++) {
                 // Pick random ability
                 let toRaise = allAbilities[Math.floor(Math.random()*allAbilities.length)];
