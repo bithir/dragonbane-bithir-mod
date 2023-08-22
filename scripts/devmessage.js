@@ -26,11 +26,11 @@ export function sendDevMessage()
                 }
                 latestVersion = Math.max(latestVersion, msgenvelope.version);
             }
-            game.symbaroum.info("Message system - latestVersion message after "+latestVersion);
+            console.info("Message system - latestVersion message after "+latestVersion);
             game.settings.set(game.bithirdbmod.config.moduleId, 'devMessageVersionNumber', latestVersion);
         })
         .fail(function(data) {
-            game.symbaroum.error("Could not retreive Bithir mods news Message:"+JSON.stringify(data));
+            console.error("Could not retreive Bithir mods news Message:"+JSON.stringify(data));
         });
     }    
 }

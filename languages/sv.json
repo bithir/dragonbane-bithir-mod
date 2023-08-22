@@ -9,7 +9,7 @@
     "BITHIRDBMOD.table_name": "Namn - {targettable}",
     "BITHIRDBMOD.table_profession": "Yrke",
     "BITHIRDBMOD.table_mage_profession": "Yrke - Magiker",
-    "BITHIRDBMOD.table_nickname": "Tillnamn  - {professionName}",
+    "BITHIRDBMOD.table_nickname": "Tillnamn - {professionName}",
     "BITHIRDBMOD.table_gear": "Ägodelar - {professionName}",
     "BITHIRDBMOD.table_age": "Ålder",
     "BITHIRDBMOD.table_weakness": "Svaghet",

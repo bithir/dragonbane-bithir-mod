@@ -29,34 +29,12 @@
     }],
     "requires": []
   },
-  "packFolders": [{
-    "name":"Bithir's symbaroum mods",
-    "packs": [
-      "macros",
-      "information",
-      "tables"
-    ]
-  }],
   "packs": [{
-      "name": "macros",
-      "label": "Macros",
+      "name": "bithir-db-mods",
+      "label": "Bithir's mods",
       "system": "dragonbane",
-      "type": "Macro",
-      "path": "packs/macros",
-      "banner": "modules/dragonbane-bithir-mod/assets/banner/duck-knight-banner.webp" 
-    },{
-      "name": "information",
-      "label": "Information",
-      "system": "dragonbane",
-      "type": "JournalEntry",
-      "path": "packs/information",
-      "banner": "modules/dragonbane-bithir-mod/assets/banner/duck-knight-banner.webp" 
-    },{
-      "name": "tables",
-      "label": "Tables",
-      "system": "dragonbane",
-      "type": "RollTable",
-      "path": "packs/tables",
+      "type": "Adventure",
+      "path": "packs/bithir-db-mods",
       "banner": "modules/dragonbane-bithir-mod/assets/banner/duck-knight-banner.webp" 
   }],  
   "esmodules": [
@@ -87,7 +65,10 @@
   "media": [
     {
       "type": "cover",
-      "url": ""
+      "url": "https://raw.githubusercontent.com/bithir/dragonbane-bithir-mod/master/assets/banner/MJDuck_Caster-banner768x300.webp"
+    },{
+      "type": "setup",
+      "thumbnail": "modules/dragonbane-bithir-mod/assets/banner/MJDuck_Caster-banner768x300.webp"
     }
   ]
 }

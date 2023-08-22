@@ -1,6 +1,11 @@
 import { BITHIRDBMODCONF } from './config.js';
 import { BithirDBMacros } from './lib/macros.js';
 import { BithirDBApi } from './lib/api.js';
+import { sendDevMessage } from './devmessage.js';
+
+const adventurePack = `${BITHIRDBMODCONF.moduleId}.bithir-db-mods`;
+const adventureName = "Required items for Bithir's mods";
+
 
 Hooks.once('init', async function() {
     game.settings.register(BITHIRDBMODCONF.moduleId, 'moduleVersion', {
@@ -27,8 +32,43 @@ Hooks.once('init', async function() {
 });
 
 Hooks.once('ready', async function() {
+    if (game.user.isGM) {
+        ModuleImport();
+        sendDevMessage();
+    }
     game.bithirdbmod.config.ageBonusSkillsCount[game.bithirdbmod.api.localize('age_young')] = 2;
     game.bithirdbmod.config.ageBonusSkillsCount[game.bithirdbmod.api.localize('age_adult')] = 4;
     game.bithirdbmod.config.ageBonusSkillsCount[game.bithirdbmod.api.localize('age_old')] = 6;
-
 });
+
+export async function ModuleImport() {
+    //
+    // Imports all assets in the Adventure Collection.  
+    // Will overwrite existing assets. 
+    //
+    const moduleVersion = game.modules.get(BITHIRDBMODCONF.moduleId)?.version;
+    if(!foundry.utils.isNewerVersion(moduleVersion, game.settings.get(BITHIRDBMODCONF.moduleId, 'moduleVersion') ) ) {
+        console.info(`moduleVersion[${moduleVersion}] is not newer than moduleVersion setting[${game.settings.get(BITHIRDBMODCONF.moduleId, 'moduleVersion')}]`);
+        return;
+    }
+
+    const id = Hooks.on('importAdventure', (adventure, formData, created, updated) => {
+        // console.log('adventure',adventure,'formData',formData,'created',created,'updated',updated)
+        if (adventure.name === adventureName) {
+            // console.log(`Removing hook[${id}]`);
+            Hooks.off('importAdventure', id);
+            if(created || updated) {
+                game.settings.set(BITHIRDBMODCONF.moduleId, 'moduleVersion', moduleVersion);                
+                ui.notifications.notify(`Import of ${adventureName} Complete`);
+                return;
+            } else {
+                return ui.notifications.warn(`There was a problem with the Import of ${adventureName}`);
+            }
+        }
+    });
+
+    const pack = game.packs.get(adventurePack);
+    const adventureId = pack.index.find(a => a.name === adventureName)?._id;    
+    const adventure = await pack.getDocument(adventureId);
+    await adventure.sheet.render(true);
+};
