@@ -4,6 +4,7 @@ This is a small module containing useful additions for the Dragonbane system.
 
 The main features it has are:
 - A PC generator
+- A magical treasure generator
 
 See all patchnotes at https://github.com/bithir/dragonbane-bithir-mod/
 
