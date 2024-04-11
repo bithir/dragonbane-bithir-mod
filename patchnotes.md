@@ -1,3 +1,6 @@
+### Release 1.5.2
+- [x] Fixed accidental removal of module import
+
 ### Release 1.5.1
 - [x] Fix for evaluating the title before init
 

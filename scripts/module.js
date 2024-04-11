@@ -75,5 +75,8 @@ export async function ModuleImport() {
         }
     });
 
-
+    const pack = game.packs.get(adventurePack);
+    const adventureId = pack.index.find(a => a.name === adventureName)?._id;    
+    const adventure = await pack.getDocument(adventureId);
+    await adventure.sheet.render(true);
 };
