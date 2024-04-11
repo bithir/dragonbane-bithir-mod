@@ -1,7 +1,6 @@
 export const BITHIRDBMODCONF = {};
 
 BITHIRDBMODCONF.moduleId = 'dragonbane-bithir-mod';
-BITHIRDBMODCONF.title = game.modules.get(BITHIRDBMODCONF.moduleId).title;
 BITHIRDBMODCONF.basePath = `modules/${BITHIRDBMODCONF.moduleId}`
 BITHIRDBMODCONF.assetPath = `${BITHIRDBMODCONF.basePath}/assets`;
 BITHIRDBMODCONF.templatePath = `${BITHIRDBMODCONF.basePath}/templates`;

@@ -29,6 +29,8 @@ Hooks.once('init', async function() {
         macros: new BithirDBMacros(),
         api: new BithirDBApi()
     };
+
+    game.bithirdbmod.config.title = game.modules.get(BITHIRDBMODCONF.moduleId).title;    
     game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.config;
     game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.macros;
     game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.api;

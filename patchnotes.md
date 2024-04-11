@@ -1,3 +1,6 @@
+### Release 1.5.1
+- [x] Fix for evaluating the title before init
+
 ### Release 1.5
 - [x] Fixed Proficiency skills not done correctly [#3](https://github.com/bithir/dragonbane-bithir-mod/issues/3)
 - [x] Fixed Chat text overflow [#2](https://github.com/bithir/dragonbane-bithir-mod/issues/2)
