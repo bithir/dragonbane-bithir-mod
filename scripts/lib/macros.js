@@ -11,6 +11,7 @@ export class BithirDBMacros
     async generatePC() {
         const api = game.bithirdbmod.api;
         const config = game.bithirdbmod.config;
+        const dialogId = `${config.moduleId}-${foundry.utils.randomID()}`;
         const defaultRandom = [`<option value='-1'>${api.localize('random')}</option>`];
         const defaultSettings = game.user.getFlag(config.moduleId, 'generatorDefaults') ?? config.generatorDefaults;
 
@@ -47,27 +48,27 @@ export class BithirDBMacros
 
         const dialog_content = `<div class="bdmgendiag"><div class="flexrow headerrow"><div class='header'>${api.localize('generatorTitle')}</div></div>
         <div class="flexrow"><table><tbody><tr>
-            <th>${api.localize('table_kin')}</th>
+            <th><label for='${dialogId}-kin'>${api.localize('table_kin')}</label></th>
             <td>
-                <select name='kinOption'>${kinOptions}</select>
+                <select id='${dialogId}-kin' name='kinOption'>${kinOptions}</select>
             </td>
         </tr></tbody></table></div>
         <div class="flexrow"><table><tbody><tr>
-            <th>${api.localize('table_profession')}</th>
+            <th><label for='${dialogId}-profession'>${api.localize('table_profession')}</label></th>
             <td>
-                <select name='professionOption'>${professionOptions}</select>
+                <select id='${dialogId}-profession' name='professionOption'>${professionOptions}</select>
             </td>
         </tr></tbody></table></div>
         <div class="flexrow"><table><tbody><tr>
-            <th>${api.localize('randomTrain')}</th>
+            <th><label for='${dialogId}-train'>${api.localize('randomTrain')}</label></th>
             <td>
                 <input class='checkbox' type='checkbox' ${defaultSettings.train ? 'checked':''} value='true' name='train'>
             </td>
         </tr></tbody></table></div>
         <div class="flexrow"><table><tbody><tr>
-            <th>${api.localize('saveAsDefault')}</th>
+            <th><label for='${dialogId}-save'>${api.localize('saveAsDefault')}</label></th>
             <td>
-                <input class='checkbox' type='checkbox' value='true' name='saveAsDefault'>
+                <input id='${dialogId}-save' class='checkbox' type='checkbox' value='true' name='saveAsDefault'>
             </td>
         </tr></tbody></table></div>
         </div>`;

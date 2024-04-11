@@ -88,6 +88,7 @@ export class PCGenerator
                     return;
                 }    
                 let profItem = duplicate(systemAbility);
+                profItem.system.abilityType = "profession";
                 allEmbeddedItems.push( profItem);
             } else {
                 // profession heroic abilities 
@@ -97,6 +98,7 @@ export class PCGenerator
                     return;
                 }
                 let profItem = duplicate(systemAbility);
+                profItem.system.abilityType = "profession";
                 allEmbeddedItems.push( profItem);
             }
         }

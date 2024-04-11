@@ -5,7 +5,7 @@ import { sendDevMessage } from './devmessage.js';
 
 const adventurePack = `${BITHIRDBMODCONF.moduleId}.bithir-db-mods`;
 const adventureName = "Required items for Bithir's mods";
-
+const adventureJournalID = "fNYzxnciyk3yNl6v";
 
 Hooks.once('init', async function() {
     game.settings.register(BITHIRDBMODCONF.moduleId, 'moduleVersion', {
@@ -29,6 +29,10 @@ Hooks.once('init', async function() {
         macros: new BithirDBMacros(),
         api: new BithirDBApi()
     };
+    game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.config;
+    game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.macros;
+    game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.api;
+
 });
 
 Hooks.once('ready', async function() {
@@ -60,6 +64,8 @@ export async function ModuleImport() {
             if(created || updated) {
                 game.settings.set(BITHIRDBMODCONF.moduleId, 'moduleVersion', moduleVersion);                
                 ui.notifications.notify(`Import of ${adventureName} Complete`);
+                const adventure = game.journals.get(adventureJournalID);
+                adventure?.sheet.render(true);                
                 return;
             } else {
                 return ui.notifications.warn(`There was a problem with the Import of ${adventureName}`);
@@ -67,8 +73,5 @@ export async function ModuleImport() {
         }
     });
 
-    const pack = game.packs.get(adventurePack);
-    const adventureId = pack.index.find(a => a.name === adventureName)?._id;    
-    const adventure = await pack.getDocument(adventureId);
-    await adventure.sheet.render(true);
+
 };

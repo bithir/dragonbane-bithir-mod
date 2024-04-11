@@ -54,4 +54,40 @@ export class BithirDBApi
         return [item, text];
     }
     
+
+    pagePopup(journalId, pageId) {
+        const config = game.bithirdbmod.config;
+        if( !journalId || !pageId ) {
+            return ui.notification.error(`[${game.modules.get(config.moduleId).title}] Can't popout without both Journal ID and Page ID`);
+        }
+        const TEMP_STORAGE = config.moduleId;
+        if( !document[TEMP_STORAGE] ) {
+            document[TEMP_STORAGE] = {};
+        }
+        
+        const journal = game.journal.get(journalId);
+        
+        const html = journal.pages.get(pageId).text.content;
+        
+        let myDialog = ui.windows[document[TEMP_STORAGE][pageId]];
+        
+        if( myDialog ) {
+            myDialog.close({});
+            delete document[TEMP_STORAGE][pageId];
+            return;
+        }
+        
+        myDialog = new Dialog({
+                    title: "Quick Tips",
+                    content: `<div class='bithirmod'>${html}</div>`,
+                    options: {
+                        width: 900,
+                        resizable: true,
+                    },
+                    callback: () => {},
+        buttons: {  }
+        });
+        document[TEMP_STORAGE][pageId] = myDialog.appId;
+        myDialog.render(true);        
+    }
 }
