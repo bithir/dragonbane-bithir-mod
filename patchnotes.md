@@ -1,3 +1,6 @@
+### Release 1.6
+- [x] Updated for Foundry VTT v12 compatibility
+
 ### Release 1.5.2
 - [x] Fixed accidental removal of module import
 
