@@ -1,3 +1,6 @@
+### Release 1.6.1
+- [x] Fixed macro for no dialogue pc generation
+
 ### Release 1.6
 - [x] Updated for Foundry VTT v12 compatibility
 

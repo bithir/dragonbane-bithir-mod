@@ -3,6 +3,7 @@ import {PCGenerator} from './pcgenerator.js';
 export class BithirDBMacros
 {
     async generatePCNoDialog() {
+        const config = game.bithirdbmod.config;
         const defaultSettings = game.user.getFlag(config.moduleId, 'generatorDefaults') ?? config.generatorDefaults;
         let pc = new PCGenerator()
         pc.generatePC(defaultSettings);
