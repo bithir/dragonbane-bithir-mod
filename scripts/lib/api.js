@@ -48,7 +48,7 @@ export class BithirDBApi
                     console.log(`Failback to use text instead of table item failed for ${tableName} with result`, drawResult);
                 }
             } else {
-                item = duplicate(game.items.get(drawResult.documentId));
+                item = foundry.utils.duplicate(game.items.get(drawResult.documentId));
             }
         }
         return [item, text];

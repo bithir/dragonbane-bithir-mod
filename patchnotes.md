@@ -1,3 +1,6 @@
+### Release 1.7.0
+- [x] Fixed issues with attributes with Dragonbane >= 1.9.0
+
 ### Release 1.6.1
 - [x] Fixed macro for no dialogue pc generation
 

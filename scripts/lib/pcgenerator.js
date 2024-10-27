@@ -44,11 +44,14 @@ export class PCGenerator
         } else {
             [kin, kinName] = await api.getRollTableValues(api.localize('table_kin') );            
         }
+        kin._id = foundry.utils.randomID();
         allEmbeddedItems.push(kin);
         // Get kin ability
         let allKinAbilities = kin.system.abilities.split(',');
         for(let kinAbility of allKinAbilities) {
-            allEmbeddedItems.push(game.items.getName(kinAbility.trim()));
+            const kinItem = foundry.utils.duplicate(game.items.getName(kinAbility.trim()));
+            kinItem._id = foundry.utils.randomID();
+            allEmbeddedItems.push(kinItem);
         }
         
         // Roll name
@@ -58,15 +61,17 @@ export class PCGenerator
         let profession, professionName;
         profession = game.items.get(generatorSelection.profession);
         if(profession) {
-            profession = duplicate(profession);
+            profession = foundry.utils.duplicate(profession);
             // TODO: Mage need to be in the professionName for table draws later
             if(mages.includes(profession._id)) {
                 professionName = api.localize('mage_name');
             } else if(profession.type != "profession" ) {
                 // For artisans, the profession item contains the master ability
                 // So our educated guess is artisan if the profession ability is not a profession
-                allEmbeddedItems.push(duplicate(profession));                
-                profession = duplicate(game.items.getName(api.localize("artisan_name")));
+                const profItem = foundry.utils.duplicate(profession);
+                profItem._id = foundry.utils.randomID();
+                allEmbeddedItems.push(profItem);                
+                profession = foundry.utils.duplicate(game.items.getName(api.localize("artisan_name")));
                 // TODO: Artisan need to be in the professionName for table draws later
                 professionName = profession.name; 
             } else {
@@ -87,8 +92,9 @@ export class PCGenerator
                     console.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
                     return;
                 }    
-                let profItem = duplicate(systemAbility);
+                let profItem = foundry.utils.duplicate(systemAbility);
                 profItem.system.abilityType = "profession";
+                profItem._id = foundry.utils.randomID();
                 allEmbeddedItems.push( profItem);
             } else {
                 // profession heroic abilities 
@@ -97,12 +103,14 @@ export class PCGenerator
                     console.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
                     return;
                 }
-                let profItem = duplicate(systemAbility);
+                let profItem = foundry.utils.duplicate(systemAbility);
                 profItem.system.abilityType = "profession";
+                profItem._id = foundry.utils.randomID();
                 allEmbeddedItems.push( profItem);
             }
         }
         console.log(`profession[${  JSON.stringify(profession)}] professionName[${professionName}]`);
+        profession._id = foundry.utils.randomID();
         allEmbeddedItems.push(profession);
         
         // Roll profession nickname
@@ -138,7 +146,7 @@ export class PCGenerator
             let itemUUIDMatch = [...myItem.matchAll(/(\[\[\/roll (?<roll>[^\]]+)\]\])?x?@UUID\[(?<uuid>[^\]]+)]/g)]
             // let itemUUIDMatch = myItem.match(/(?<test>\[\[\/roll ([^\]]+)\]\]x)?UUID\[(?<uuid>[^\]]+)])/);
             if(!itemUUIDMatch || !itemUUIDMatch[0]) continue;
-            let carriedTool = duplicate(await fromUuid(itemUUIDMatch[0].groups['uuid']));
+            let carriedTool = foundry.utils.duplicate(await fromUuid(itemUUIDMatch[0].groups['uuid']));
             if(['weapon','armor','helmet'].includes(carriedTool.type)) {
                 carriedTool.system.worn = true;
             } else if(itemUUIDMatch[0].groups['roll']) { 
@@ -146,6 +154,7 @@ export class PCGenerator
                 console.log(`Rolled quantity ${carriedTool.system.quantity}`);
                 // carriedTool.name = `${carriedTool.system.quantity} ${carriedTool.name}`;
             }
+            carriedTool._id = foundry.utils.randomID();
             allEmbeddedItems.push(carriedTool);
         }
         // Roll age
@@ -161,25 +170,30 @@ export class PCGenerator
         actorDetails.system.appearance = appearance;
         
         // Roll memento
-        let [mementoItem, memento] = await api.getRollTableValues(api.localize(`table_memento`));
+        let [mementoItem, memento] = await api.getRollTableValues(api.localize(`table_memento`));        
+        mementoItem._id = foundry.utils.randomID();
         allEmbeddedItems.push(mementoItem);
         
         // Roll all attributes
         const attributes = ['agl', 'cha','con','int','str','wil'];
         actorDetails.system.attributes = {};
         for(let attr of attributes) {
-            actorDetails.system.attributes[`${attr}.value`] = await api.rollAttribute();
+            const attribVal = await api.rollAttribute();
+            actorDetails.system.attributes[`${attr}`] = {
+                'base': attribVal
+            };
         }
         
         console.log(actorDetails, allEmbeddedItems);
         
         let scriptActor = await Actor.create(actorDetails);
         await scriptActor.createEmbeddedDocuments("Item",allEmbeddedItems);
+        console.log("What is going on",scriptActor);
         
         // Train in abilities
         if(train) {
             let upgradeAbilities = [];
-            let allAbilities = duplicate(scriptActor.system.skills);
+            let allAbilities = foundry.utils.duplicate(scriptActor.system.skills);
             let trainedAbilities = scriptActor.system.skills.filter( (elem) => { return elem.system.isProfessionSkill});
             console.log("All trainedAbilities",trainedAbilities);
             // 6 abilities from profession at 2x base chance
