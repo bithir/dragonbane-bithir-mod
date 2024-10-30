@@ -7,11 +7,11 @@ export class PCGenerator
     }
 
     async generatePC(generatorSelection) {
-        console.log("Generating PC");
         // Establish defaults we will use later on
-        let api = game.bithirdbmod.api;
+        const api = game.bithirdbmod.api;
         let conf = game.bithirdbmod.config;
         let train = generatorSelection.train;
+        api.log("Generating PC");
 
         // Make a list of mage occupation ids
         let mages = game.tables.getName(api.localize(`table_mage_profession`)).results.map(
@@ -44,13 +44,11 @@ export class PCGenerator
         } else {
             [kin, kinName] = await api.getRollTableValues(api.localize('table_kin') );            
         }
-        kin._id = foundry.utils.randomID();
         allEmbeddedItems.push(kin);
         // Get kin ability
         let allKinAbilities = kin.system.abilities.split(',');
         for(let kinAbility of allKinAbilities) {
             const kinItem = foundry.utils.duplicate(game.items.getName(kinAbility.trim()));
-            kinItem._id = foundry.utils.randomID();
             allEmbeddedItems.push(kinItem);
         }
         
@@ -69,7 +67,6 @@ export class PCGenerator
                 // For artisans, the profession item contains the master ability
                 // So our educated guess is artisan if the profession ability is not a profession
                 const profItem = foundry.utils.duplicate(profession);
-                profItem._id = foundry.utils.randomID();
                 allEmbeddedItems.push(profItem);                
                 profession = foundry.utils.duplicate(game.items.getName(api.localize("artisan_name")));
                 // TODO: Artisan need to be in the professionName for table draws later
@@ -89,28 +86,25 @@ export class PCGenerator
                 // One of 
                 let systemAbility = game.items.getName(api.localize(conf.artisans[Math.floor(Math.random()*conf.artisans.length)]));
                 if(!systemAbility) {
-                    console.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
+                    api.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
                     return;
                 }    
                 let profItem = foundry.utils.duplicate(systemAbility);
                 profItem.system.abilityType = "profession";
-                profItem._id = foundry.utils.randomID();
                 allEmbeddedItems.push( profItem);
             } else {
                 // profession heroic abilities 
                 let systemAbility = game.items.getName(profession.system.abilities);
                 if(!systemAbility) {
-                    console.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
+                    api.log(`Could not find system ability ${profession.system.abilities}`, actorDetails,allEmbeddedItems );
                     return;
                 }
                 let profItem = foundry.utils.duplicate(systemAbility);
                 profItem.system.abilityType = "profession";
-                profItem._id = foundry.utils.randomID();
                 allEmbeddedItems.push( profItem);
             }
         }
-        console.log(`profession[${  JSON.stringify(profession)}] professionName[${professionName}]`);
-        profession._id = foundry.utils.randomID();
+        api.log(`profession[${  JSON.stringify(profession)}] professionName[${professionName}]`);
         allEmbeddedItems.push(profession);
         
         // Roll profession nickname
@@ -151,10 +145,8 @@ export class PCGenerator
                 carriedTool.system.worn = true;
             } else if(itemUUIDMatch[0].groups['roll']) { 
                 carriedTool.system.quantity = (await (new Roll(itemUUIDMatch[0].groups['roll'])).roll()).total;
-                console.log(`Rolled quantity ${carriedTool.system.quantity}`);
-                // carriedTool.name = `${carriedTool.system.quantity} ${carriedTool.name}`;
+                api.log(`Rolled quantity [${carriedTool.name}] ${carriedTool.system.quantity}`);
             }
-            carriedTool._id = foundry.utils.randomID();
             allEmbeddedItems.push(carriedTool);
         }
         // Roll age
@@ -171,12 +163,11 @@ export class PCGenerator
         
         // Roll memento
         let [mementoItem, memento] = await api.getRollTableValues(api.localize(`table_memento`));        
-        mementoItem._id = foundry.utils.randomID();
         allEmbeddedItems.push(mementoItem);
         
         // Roll all attributes
         const attributes = ['agl', 'cha','con','int','str','wil'];
-        actorDetails.system.attributes = {};
+        actorDetails.system.attributes = {};        
         for(let attr of attributes) {
             const attribVal = await api.rollAttribute();
             actorDetails.system.attributes[`${attr}`] = {
@@ -184,18 +175,17 @@ export class PCGenerator
             };
         }
         
-        console.log(actorDetails, allEmbeddedItems);
+        api.log(actorDetails, allEmbeddedItems);
         
-        let scriptActor = await Actor.create(actorDetails);
+        let scriptActor = await Actor.create(actorDetails, { keepId : true} );
         await scriptActor.createEmbeddedDocuments("Item",allEmbeddedItems);
-        console.log("What is going on",scriptActor);
-        
+                
         // Train in abilities
         if(train) {
             let upgradeAbilities = [];
             let allAbilities = foundry.utils.duplicate(scriptActor.system.skills);
             let trainedAbilities = scriptActor.system.skills.filter( (elem) => { return elem.system.isProfessionSkill});
-            console.log("All trainedAbilities",trainedAbilities);
+            api.log("All trainedAbilities",trainedAbilities);
             // 6 abilities from profession at 2x base chance
             for ( let i = 0; i<6; i++) {
                 // Pick random ability
@@ -205,14 +195,14 @@ export class PCGenerator
                 allAbilities = allAbilities.filter( (elem) => elem != toRaise);
             }
         
-            console.log('allAbilities', allAbilities)
+            api.log('allAbilities', allAbilities)
             const ageBonusSkillsCount = game.bithirdbmod.config.ageBonusSkillsCount;
         
             // Increase abilities as per age
             for ( let i = 0; i<ageBonusSkillsCount[age] && allAbilities.length > 0; i++) {
                 // Pick random ability
                 let toRaise = allAbilities[Math.floor(Math.random()*allAbilities.length)];
-                console.log(toRaise);
+                api.log('toRaise',toRaise);
                 upgradeAbilities.push({_id: toRaise._id, 'system.value' : scriptActor._getBaseChance(toRaise)*2 })
                 allAbilities = allAbilities.filter( (elem) => elem != toRaise);    
             }

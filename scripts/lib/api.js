@@ -3,6 +3,13 @@ export class BithirDBApi
     constructor() {
     }
 
+    log(...args) {
+
+        if(game.settings.get(game.bithirdbmod.config.moduleId,"debugmode") )
+            return console.log('%cBithir dragonbane mod |', "font-weight: bold;color:goldenrod;", ...args);
+        return null;
+    }
+
     localize(key, repl) {
         if(repl) {
             // user format instead of localize
@@ -32,9 +39,10 @@ export class BithirDBApi
     }
 
     async getRollTableValues(tableName) {
+        const api = game.bithirdbmod.api;
         const table = game.tables.getName(tableName);
         if(!table) {
-            return console.log(`Could not find table[${tableName}]`);
+            return api.log(`Could not find table[${tableName}]`);
         }
         const drawResult = (await table.roll()).results[0];
         let item = null;
@@ -42,10 +50,10 @@ export class BithirDBApi
         if(drawResult.documentCollection === 'Item') {
             let tableItem = game.items.get(drawResult.documentId);
             if(!tableItem) {
-                console.log(`Could not retrieve item for ${tableName} with result`, drawResult);
+                api.log(`Could not retrieve item for ${tableName} with result`, drawResult);
                 tableItem = game.items.getName(drawResult.text);
                 if(!tableItem) {
-                    console.log(`Failback to use text instead of table item failed for ${tableName} with result`, drawResult);
+                    api.log(`Failback to use text instead of table item failed for ${tableName} with result`, drawResult);
                 }
             } else {
                 item = foundry.utils.duplicate(game.items.get(drawResult.documentId));

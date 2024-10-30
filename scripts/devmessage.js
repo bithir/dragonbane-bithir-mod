@@ -1,6 +1,7 @@
 
 export function sendDevMessage() 
 {
+    const api = game.bithirdbmod.api;
     if( game.user.isGM ) {
         let jqxhr = $.getJSON( "https://raw.githubusercontent.com/bithir/dragonbane-bithir-mod/master/msgdata/data.json", function(data) 
         {                    
@@ -26,11 +27,11 @@ export function sendDevMessage()
                 }
                 latestVersion = Math.max(latestVersion, msgenvelope.version);
             }
-            console.info("Message system - latestVersion message after "+latestVersion);
+            api.log("Message system - latestVersion message after "+latestVersion);
             game.settings.set(game.bithirdbmod.config.moduleId, 'devMessageVersionNumber', latestVersion);
         })
         .fail(function(data) {
-            console.error("Could not retreive Bithir mods news Message:"+JSON.stringify(data));
+            api.log("Could not retreive Bithir mods news Message:"+JSON.stringify(data));
         });
     }    
 }

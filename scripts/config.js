@@ -1,5 +1,7 @@
 export const BITHIRDBMODCONF = {};
 
+BITHIRDBMODCONF.log = false;
+
 BITHIRDBMODCONF.moduleId = 'dragonbane-bithir-mod';
 BITHIRDBMODCONF.basePath = `modules/${BITHIRDBMODCONF.moduleId}`
 BITHIRDBMODCONF.assetPath = `${BITHIRDBMODCONF.basePath}/assets`;

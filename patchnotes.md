@@ -1,3 +1,8 @@
+### Release 1.7.1
+- [x] Undid some of the attempted (and not successful) fixes for issues with attributes with Dragonbane >= 1.9.0
+- [x] Added setting for debug
+- [x] Made debug nicer in the console
+
 ### Release 1.7.0
 - [x] Fixed issues with attributes with Dragonbane >= 1.9.0
 

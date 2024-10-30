@@ -84,7 +84,7 @@ export class BithirDBMacros
                         profession: html.find("select[name='professionOption']").val(),
                         train: html.find("input[name='train']")[0].checked,
                     }
-                    console.log(`generatorSelection`,generatorSelection);
+                    api.log(`generatorSelection`,generatorSelection);
 
                     if(html.find("input[name='saveAsDefault']")[0].checked) { 
                         game.user.setFlag(config.moduleId, 'generatorDefaults', generatorSelection);

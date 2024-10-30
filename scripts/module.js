@@ -24,6 +24,14 @@ Hooks.once('init', async function() {
         default: '0',
     });
 
+    game.settings.register(BITHIRDBMODCONF.moduleId, 'debugmode', {
+        name: 'Bithir dragonbane debug',
+        scope: 'world',
+        config: true,
+        type: Boolean,
+        default: false,
+    });
+
     game.bithirdbmod = {
         config: BITHIRDBMODCONF,
         macros: new BithirDBMacros(),
@@ -31,8 +39,8 @@ Hooks.once('init', async function() {
     };
 
     game.bithirdbmod.config.title = game.modules.get(BITHIRDBMODCONF.moduleId).title;    
-    game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.config;
-    game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.macros;
+    CONFIG[BITHIRDBMODCONF.moduleId] = game.bithirdbmod.config;
+    // game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.macros;
     game.modules.get(BITHIRDBMODCONF.moduleId).api = game.bithirdbmod.api;
 
 });
@@ -52,16 +60,18 @@ export async function ModuleImport() {
     // Imports all assets in the Adventure Collection.  
     // Will overwrite existing assets. 
     //
+    const api = game.bithirdbmod.api;
+
     const moduleVersion = game.modules.get(BITHIRDBMODCONF.moduleId)?.version;
     if(!foundry.utils.isNewerVersion(moduleVersion, game.settings.get(BITHIRDBMODCONF.moduleId, 'moduleVersion') ) ) {
-        console.info(`moduleVersion[${moduleVersion}] is not newer than moduleVersion setting[${game.settings.get(BITHIRDBMODCONF.moduleId, 'moduleVersion')}]`);
+        api.log(`moduleVersion[${moduleVersion}] is not newer than moduleVersion setting[${game.settings.get(BITHIRDBMODCONF.moduleId, 'moduleVersion')}]`);
         return;
     }
 
     const id = Hooks.on('importAdventure', (adventure, formData, created, updated) => {
-        // console.log('adventure',adventure,'formData',formData,'created',created,'updated',updated)
+        // api.log('adventure',adventure,'formData',formData,'created',created,'updated',updated)
         if (adventure.name === adventureName) {
-            // console.log(`Removing hook[${id}]`);
+            // api.log(`Removing hook[${id}]`);
             Hooks.off('importAdventure', id);
             if(created || updated) {
                 game.settings.set(BITHIRDBMODCONF.moduleId, 'moduleVersion', moduleVersion);                
