@@ -1,3 +1,6 @@
+### Release 1.8.0
+- [x] Added Swedish support for magic and cursed items thanks to Clawens@Discord
+
 ### Release 1.7.1
 - [x] Undid some of the attempted (and not successful) fixes for issues with attributes with Dragonbane >= 1.9.0
 - [x] Added setting for debug
