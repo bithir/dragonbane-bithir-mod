@@ -2,7 +2,7 @@ export class BithirDBApi
 {
     constructor() {
     }
-
+    
     log(...args) {
 
         if(game.settings.get(game.bithirdbmod.config.moduleId,"debugmode") )
@@ -16,6 +16,10 @@ export class BithirDBApi
             return game.i18n.format(`${game.bithirdbmod.config.i18nPath}${key}`,repl);
         }
         return game.i18n.localize(`${game.bithirdbmod.config.i18nPath}${key}`);
+    }
+
+    get hasCoreSetEnabled() {
+        return game.modules.get("dragonbane-grundspel")?.active || game.modules.get("dragonbane-coreset")?.active
     }
 
     async rollAttribute() {

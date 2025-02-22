@@ -50,9 +50,20 @@ Hooks.once('ready', async function() {
         ModuleImport();
         sendDevMessage();
     }
-    game.bithirdbmod.config.ageBonusSkillsCount[game.bithirdbmod.api.localize('age_young')] = 2;
-    game.bithirdbmod.config.ageBonusSkillsCount[game.bithirdbmod.api.localize('age_adult')] = 4;
-    game.bithirdbmod.config.ageBonusSkillsCount[game.bithirdbmod.api.localize('age_old')] = 6;
+
+    game.bithirdbmod.config.ageBonusSkillsCount[game.i18n.localize('DoD.ageTypes.young').toLowerCase()] = {
+        skills:2,
+        key:`young`
+    }
+    game.bithirdbmod.config.ageBonusSkillsCount[game.i18n.localize('DoD.ageTypes.adult').toLowerCase()] = {
+        skills:2,
+        key:`adult`
+    }
+    game.bithirdbmod.config.ageBonusSkillsCount[game.i18n.localize('DoD.ageTypes.old').toLowerCase()] = {
+        skills:6,
+        key:`old`
+    }
+
 });
 
 export async function ModuleImport() {

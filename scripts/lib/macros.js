@@ -3,6 +3,10 @@ import {PCGenerator} from './pcgenerator.js';
 export class BithirDBMacros
 {
     async generatePCNoDialog() {
+        const api = game.bithirdbmod.api;
+        if( !api.hasCoreSetEnabled ) {
+            return ui.notifications.error(game.i18n.localize('BITHIRDBMOD.missingCoreError'));
+        }        
         const config = game.bithirdbmod.config;
         const defaultSettings = game.user.getFlag(config.moduleId, 'generatorDefaults') ?? config.generatorDefaults;
         let pc = new PCGenerator()
@@ -11,6 +15,9 @@ export class BithirDBMacros
 
     async generatePC() {
         const api = game.bithirdbmod.api;
+        if( !api.hasCoreSetEnabled ) {
+            return ui.notifications.error(game.i18n.localize('BITHIRDBMOD.missingCoreError'));
+        }        
         const config = game.bithirdbmod.config;
         const dialogId = `${config.moduleId}-${foundry.utils.randomID()}`;
         const defaultRandom = [`<option value='-1'>${api.localize('random')}</option>`];

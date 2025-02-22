@@ -6,6 +6,21 @@ export class PCGenerator
 
     }
 
+    getMageSkill(profession) {
+        const api = game.bithirdbmod.api;
+        let profSkills = profession.system.skills.split(',');
+        for(let magicSkill of profSkills) {
+            api.log("Mage-skilllist",magicSkill);
+            let skill = game.items.getName(magicSkill.trim());
+            if(!skill) continue;
+            if(skill.system.skillType == "magic") {
+                skill = foundry.utils.duplicate(skill);
+                api.log("Mage-skill found",skill);
+                return skill;
+            }
+        }
+    }
+
     async generatePC(generatorSelection) {
         // Establish defaults we will use later on
         const api = game.bithirdbmod.api;
@@ -55,14 +70,20 @@ export class PCGenerator
         // Roll name
         let [nameItem, characterName] = await api.getRollTableValues(api.localize(`table_name`, { targettable:kinName}));
         actorDetails.name = characterName;
-        // Roll profession
-        let profession, professionName;
+        // Roll profession - treat mage skills uniqely as it is a secondary skill
+        let profession, professionName, mageSkill;
         profession = game.items.get(generatorSelection.profession);
+        api.log("Profession name", profession);
         if(profession) {
             profession = foundry.utils.duplicate(profession);
             // TODO: Mage need to be in the professionName for table draws later
             if(mages.includes(profession._id)) {
+                mageSkill = this.getMageSkill(profession);
+                if(mageSkill)  {
+                    allEmbeddedItems.push(mageSkill);
+                }
                 professionName = api.localize('mage_name');
+                // Get Mage skill
             } else if(profession.type != "profession" ) {
                 // For artisans, the profession item contains the master ability
                 // So our educated guess is artisan if the profession ability is not a profession
@@ -77,11 +98,17 @@ export class PCGenerator
         } else {
             [profession, professionName] = await api.getRollTableValues(api.localize(`table_profession`));
             // Used later when we iterate and raise skills
+            api.log(`Profession name[${professionName}]`);
             if(professionName.startsWith(api.localize('mage_starter'))) {    
                 let [mageProfession, mageType] = await api.getRollTableValues(api.localize(`table_mage_profession`));   
                 profession = mageProfession;
                 // Need to handle secondary skills here 
-                professionName = 'Mage';
+                api.log("Mage profession selected:",mageProfession);
+                mageSkill = this.getMageSkill(profession);
+                if(mageSkill)  {
+                    allEmbeddedItems.push(mageSkill);
+                }
+                professionName = api.localize('mage_name');
             } else if(professionName.startsWith(api.localize('artisan_starter') ) ) {
                 // One of 
                 let systemAbility = game.items.getName(api.localize(conf.artisans[Math.floor(Math.random()*conf.artisans.length)]));
@@ -150,8 +177,10 @@ export class PCGenerator
             allEmbeddedItems.push(carriedTool);
         }
         // Roll age
+        const ageBonusSkillsCount = game.bithirdbmod.config.ageBonusSkillsCount;
         let [ageItemNotUsed, age] = await api.getRollTableValues(api.localize('table_age'));
-        actorDetails.system.age = age;
+        age = age.toLowerCase();
+        actorDetails.system.age = ageBonusSkillsCount[age].key;
         
         // Roll weakness
         let [weaknessItemNotUsed, weakness] = await api.getRollTableValues(api.localize(`table_weakness`));
@@ -184,33 +213,41 @@ export class PCGenerator
         if(train) {
             let upgradeAbilities = [];
             let allAbilities = foundry.utils.duplicate(scriptActor.system.skills);
-            let trainedAbilities = scriptActor.system.skills.filter( (elem) => { return elem.system.isProfessionSkill});
-            api.log("All trainedAbilities",trainedAbilities);
+            let trainedAbilities = scriptActor.system.skills.filter( (elem) => { return elem.system.isProfessionSkill && elem.system.skillType != "magic"});
+            api.log("All trainedAbilities",trainedAbilities,`remainder count[${allAbilities.length}]`);
             // 6 abilities from profession at 2x base chance
             for ( let i = 0; i<6; i++) {
                 // Pick random ability
-                let toRaise = trainedAbilities[Math.floor(Math.random()*trainedAbilities.length)];
+                let toRaise = trainedAbilities[Math.floor(Math.random()*trainedAbilities.length)];                
                 upgradeAbilities.push({_id: toRaise._id, 'system.value' : scriptActor._getBaseChance(toRaise)*2 })
+                api.log(`toRaise - profession[${toRaise.name}]`);
                 trainedAbilities = trainedAbilities.filter( (elem) => elem != toRaise);    
-                allAbilities = allAbilities.filter( (elem) => elem != toRaise);
+                allAbilities = allAbilities.filter( (elem) => elem.name != toRaise.name);
             }
         
-            api.log('allAbilities', allAbilities)
-            const ageBonusSkillsCount = game.bithirdbmod.config.ageBonusSkillsCount;
+            api.log('levelling up skills - after profession',upgradeAbilities, `remainder count[${allAbilities.length}]`);
         
             // Increase abilities as per age
-            for ( let i = 0; i<ageBonusSkillsCount[age] && allAbilities.length > 0; i++) {
+            for ( let i = 0; i<ageBonusSkillsCount[age].skills && allAbilities.length > 0; i++) {
                 // Pick random ability
                 let toRaise = allAbilities[Math.floor(Math.random()*allAbilities.length)];
-                api.log('toRaise',toRaise);
                 upgradeAbilities.push({_id: toRaise._id, 'system.value' : scriptActor._getBaseChance(toRaise)*2 })
-                allAbilities = allAbilities.filter( (elem) => elem != toRaise);    
+                api.log(`toRaise - age[${toRaise.name}]`);
+                allAbilities = allAbilities.filter( (elem) => elem.name != toRaise.name);    
             }
-        
-        
+            api.log('levelling up skills - after age',upgradeAbilities, `got ageBonusSkillsCount[${age}].skills=${ageBonusSkillsCount[age].skills}`,`remainder count[${allAbilities.length}]`);
+            // Mage skill
+            if(mageSkill) {
+                let toRaise = scriptActor.items.getName(mageSkill.name);
+                upgradeAbilities.push({_id: toRaise._id, 'system.value' : scriptActor._getBaseChance(toRaise)*2 })
+                api.log(`toRaise - mage[${toRaise.name}]`);
+            }
+
+            api.log('levelling up skills - final',upgradeAbilities);
             await scriptActor.updateEmbeddedDocuments("Item",upgradeAbilities);
         }
-        
+        await scriptActor.update( {"system.hitPoints.value":scriptActor.system.hitPoints.max,
+                            "system.willPoints.value":scriptActor.system.willPoints.max});
         scriptActor.sheet.render(true);
     }
 
