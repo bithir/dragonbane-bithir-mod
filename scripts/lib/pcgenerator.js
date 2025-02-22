@@ -76,7 +76,7 @@ export class PCGenerator
         api.log("Profession name", profession);
         if(profession) {
             profession = foundry.utils.duplicate(profession);
-            // TODO: Mage need to be in the professionName for table draws later
+            // Handling of magic secondary skill
             if(mages.includes(profession._id)) {
                 mageSkill = this.getMageSkill(profession);
                 if(mageSkill)  {
@@ -90,7 +90,7 @@ export class PCGenerator
                 const profItem = foundry.utils.duplicate(profession);
                 allEmbeddedItems.push(profItem);                
                 profession = foundry.utils.duplicate(game.items.getName(api.localize("artisan_name")));
-                // TODO: Artisan need to be in the professionName for table draws later
+                // Artisan need to be in the professionName for table draws later
                 professionName = profession.name; 
             } else {
                 professionName = profession.name; 
@@ -102,8 +102,8 @@ export class PCGenerator
             if(professionName.startsWith(api.localize('mage_starter'))) {    
                 let [mageProfession, mageType] = await api.getRollTableValues(api.localize(`table_mage_profession`));   
                 profession = mageProfession;
-                // Need to handle secondary skills here 
                 api.log("Mage profession selected:",mageProfession);
+                // Handling of magic secondary skill
                 mageSkill = this.getMageSkill(profession);
                 if(mageSkill)  {
                     allEmbeddedItems.push(mageSkill);

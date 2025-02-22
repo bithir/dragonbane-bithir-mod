@@ -1,6 +1,11 @@
 {
+    "BITHIRDBMOD.macroGenerateActor": "Skapa karaktär",
+    "BITHIRDBMOD.macroGenerateActorDefaults": "Skapa karaktär (standard värden)",    
+    "BITHIRDBMOD.macroGenerateMagicItem": "Skapa magiskt föremål",    
+    "BITHIRDBMOD.macroGenerateCursedItem": "Skapa förhäxat föremål",
     "BITHIRDBMOD.generatedActorFolder":"Genererad karaktärer",
     "BITHIRDBMOD.generatorTitle":"Generera karaktär",
+    "BITHIRDBMOD.missingCoreError":"Denna funktion kräver foundry grundspels modulen från Fria Ligan",
     "BITHIRDBMOD.OK":"OK",
     "BITHIRDBMOD.CANCEL":"Avbryt",
     "BITHIRDBMOD.random":"Slumpmässig",

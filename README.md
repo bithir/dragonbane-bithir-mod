@@ -8,6 +8,12 @@ The main features it has are:
 
 See all patchnotes at https://github.com/bithir/dragonbane-bithir-mod/
 
+# Contributors
+- [x] Code, maintainance and testing: Bithir
+- [x] Jesse McGibney for the magic and cursed item tables
+- [x] Swedish support for magic and cursed items tables: Clawens@Discord
+
+
 # How to use this module
 
 To install this module, copy the link below and paste into the module install dialogue in Foundry

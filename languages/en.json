@@ -1,6 +1,11 @@
 {
+    "BITHIRDBMOD.macroGenerateActor": "Generate Character",
+    "BITHIRDBMOD.macroGenerateActorDefaults": "Generate Character (defaults)",    
+    "BITHIRDBMOD.macroGenerateMagicItem": "Generate Magic Item",    
+    "BITHIRDBMOD.macroGenerateCursedItem": "Generate Cursed Item",
     "BITHIRDBMOD.generatedActorFolder":"Generated characters",
     "BITHIRDBMOD.generatorTitle":"Generate character",
+    "BITHIRDBMOD.missingCoreError":"This function requires the core-set module from Free League",
     "BITHIRDBMOD.OK":"OK",
     "BITHIRDBMOD.CANCEL":"Cancel",
     "BITHIRDBMOD.random":"Random",
