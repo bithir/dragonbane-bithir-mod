@@ -1,3 +1,6 @@
+### Release 1.9.0
+- [x] Initial Foundry VTT v13 compatibility version.
+
 ### Release 1.8.0
 - [x] Added Swedish support for magic and cursed items thanks to Clawens@Discord
 

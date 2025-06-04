@@ -3,6 +3,11 @@
         {
             "version":1,
             "message":"<h1>Welcome to the Bithir's collection of mods</h1><br />This is a small collection of mods to enhance your experience of the Dragonbane system for Foundry.<br/>If you want to give some feedback on the module, Bithir is active on both the Foundry Discord (channel #free-league) and Dragonbane Discord."
+        },
+        {
+            "version":2,
+            "message":"<h1>Bithir's Dragonbane Mod</h1><br />This have now been updated for Foundry VTT v13."
         }
+
     ]
 }
