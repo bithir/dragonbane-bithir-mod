@@ -1,3 +1,6 @@
+### Release 1.9.1
+- [x] Fixed #11 Age "adult" does not do it correctly
+
 ### Release 1.9.0
 - [x] Initial Foundry VTT v13 compatibility version.
 

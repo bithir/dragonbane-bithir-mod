@@ -56,7 +56,7 @@ Hooks.once('ready', async function() {
         key:`young`
     }
     game.bithirdbmod.config.ageBonusSkillsCount[game.i18n.localize('DoD.ageTypes.adult').toLowerCase()] = {
-        skills:2,
+        skills:4,
         key:`adult`
     }
     game.bithirdbmod.config.ageBonusSkillsCount[game.i18n.localize('DoD.ageTypes.old').toLowerCase()] = {
